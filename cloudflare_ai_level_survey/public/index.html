@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>团队 AI 使用级别自测 · AI Usage Level Assessment</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f4f6fb;
+      --card-bg: #ffffff;
+      --text-main: #182033;
+      --text-muted: #667085;
+      --border: #e1e6ef;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font: 15px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      margin: 0;
+      padding: 20px 16px 40px;
+    }
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .back-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .langbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+    .langbar select {
+      padding: 6px 10px;
+      border: 1px solid #ccd3e0;
+      border-radius: 8px;
+      background: white;
+      font-size: 13.5px;
+      cursor: pointer;
+    }
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      margin: 0 0 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    h1 {
+      font-size: 26px;
+      margin: 0 0 8px;
+      color: #0f172a;
+    }
+    h2 {
+      font-size: 20px;
+      margin: 0 0 10px;
+    }
+    .muted {
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .q {
+      padding: 18px 0;
+      border-top: 1px solid #eef2f6;
+    }
+    .q:first-child { border-top: 0; }
+    .q-title {
+      font-weight: 650;
+      font-size: 15.5px;
+      margin-bottom: 12px;
+      display: block;
+      color: #1e293b;
+    }
+    .opts {
+      display: grid;
+      gap: 8px;
+    }
+    @media(min-width: 600px) {
+      .opts { grid-template-columns: 1fr 1fr; }
+    }
+    label.opt-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid #dce2ec;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1.45;
+      background: #fafbfc;
+      transition: all 0.15s ease;
+    }
+    label.opt-label:hover {
+      border-color: #cbd5e1;
+      background: #f1f5f9;
+    }
+    label.opt-label:has(input:checked) {
+      background: #eef3ff;
+      border-color: #3b82f6;
+      color: #1e3a8a;
+      font-weight: 550;
+    }
+    label.opt-label input {
+      margin-top: 3px;
+      accent-color: #2563eb;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 12px 20px;
+      background: #2563eb;
+      color: white;
+      border: 0;
+      border-radius: 9px;
+      font-weight: 700;
+      font-size: 14.5px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    button:hover { background: #1d4ed8; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #334155;
+    }
+    .btn-secondary:hover { background: #cbd5e1; }
+    input[type=password] {
+      padding: 10px 12px;
+      border: 1px solid #ccd3e0;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+      max-width: 240px;
+    }
+    .hidden { display: none; }
+    .result {
+      background: #eef3ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-top: 18px;
+    }
+    .level {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1d4ed8;
+      margin: 6px 0 10px;
+    }
+    .bar {
+      height: 10px;
+      background: #e7ebf3;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      background: #2563eb;
+      transition: width 0.3s ease;
+    }
+    .stat {
+      display: grid;
+      grid-template-columns: 80px 1fr 60px;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+      font-size: 13.5px;
+    }
+    .err {
+      color: #b42318;
+      font-weight: 600;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    footer {
+      font-size: 12.5px;
+      color: #94a3b8;
+      text-align: center;
+      padding: 16px 0;
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div class="topbar">
+    <a href="https://org-survey-portal.jhfnetboy.workers.dev" id="backLink" class="back-link">&larr; 返回组织调研中心首页</a>
+    <div class="langbar">
+      <label for="langSelect">Language / 语言 / ภาษา:</label>
+      <select id="langSelect">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+        <option value="th">ไทย</option>
+      </select>
+    </div>
+  </div>
+
+  <section class="card">
+    <h1 id="pageTitle">团队 AI 使用级别自测</h1>
+    <p class="muted" id="pageIntro">匿名填写 · 6 道题 · 约 2 分钟。请按目前最常见的实际做法作答。结果用于团队学习交流，不是绩效评价。</p>
+  </section>
+
+  <form id="form" class="card">
+    <div id="qs"></div>
+    <div class="actions">
+      <button id="submit" type="submit">提交并查看我的等级</button>
+      <button id="resetBtn" type="button" class="btn-secondary">清空答案</button>
+    </div>
+    <p id="err" class="err hidden"></p>
+    <div id="result" class="result hidden"></div>
+  </form>
+
+  <section class="card">
+    <h2 id="statsTitle">团队统计（管理员）</h2>
+    <p class="muted" id="statsIntro">输入管理员口令，只显示汇总，不显示个人逐题答案。</p>
+    <div class="actions" style="margin-top: 10px;">
+      <input id="pin" type="password" placeholder="管理员口令">
+      <button id="statsBtn" type="button">查看统计</button>
+    </div>
+    <p id="serr" class="err hidden"></p>
+    <div id="stats" class="hidden"></div>
+  </section>
+
+  <footer id="footerNote">本问卷不要求姓名或邮箱。请勿在答案中填写个人身份信息。</footer>
+</main>
+
+<script>
+const PORTAL_BASE = "https://org-survey-portal.jhfnetboy.workers.dev";
+
+const I18N = {
+  zh: {
+    backText: "← 返回组织调研中心首页",
+    pageTitle: "团队 AI 使用级别自测",
+    pageIntro: "匿名填写 · 6 道题 · 约 2 分钟。请按目前最常见的实际做法作答。结果用于团队学习交流，不是绩效评价。",
+    submitBtn: "提交并查看我的等级",
+    submittingBtn: "正在计算…",
+    resetBtn: "清空答案",
+    confirmReset: "确定清空全部答案？",
+    errFillAll: "请完成全部 6 道题后再提交。",
+    statsTitle: "团队统计（管理员）",
+    statsIntro: "输入管理员口令，只显示汇总，不显示个人逐题答案。",
+    pinPlaceholder: "管理员口令",
+    statsBtn: "查看统计",
+    readingStats: "正在读取…",
+    footerNote: "本问卷不要求姓名或邮箱。请勿在答案中填写个人身份信息。",
+    resLabel: "你的评估结果",
+    adviceLabel: "进阶建议：",
+    resFoot: "等级按 6 题平均分四舍五入计算，仅供自评参考。",
+    statTotal: "累计提交",
+    statAvg: "团队平均分",
+    statDist: "等级分布",
+    statQAvg: "各题平均分",
+    statUnit: "份",
+    statNote: "重复提交会被计为多份答卷。",
+    questions: [
+      {
+        title: "你在工作中使用 AI 的频率如何？",
+        options: ["几乎不用 AI", "偶尔查资料、问问题", "经常起草、分析或改进工作", "每天使用，并把多个任务交给 AI", "AI 已融入工作流程，常态使用多个工具"]
+      },
+      {
+        title: "你通常怎样向 AI 提出任务？",
+        options: ["没有使用或很少使用", "提出简单问题，直接看回答", "给出背景、目标和限制，多轮迭代", "把完整任务交给 AI 拆解并推进", "设计可复用提示词、流程或规则"]
+      },
+      {
+        title: "你如何处理 AI 的初稿或结果？",
+        options: ["不适用 / 很少使用", "大致浏览后就使用", "检查、纠正并多轮打磨", "让 AI 自检、测试、修改后再验收", "有明确质量标准、验证机制或自动检查"]
+      },
+      {
+        title: "你会把多步骤工作交给 AI 吗？",
+        options: ["不会", "只让 AI 完成一个小步骤", "自己拆分步骤并协调 AI", "AI 规划并执行多步骤，我监督验收", "有可重复运行、连接工具的 AI 工作流"]
+      },
+      {
+        title: "AI 在你的工作流程中处于什么位置？",
+        options: ["基本没有位置", "需要时临时打开一个工具", "把 AI 当协作伙伴贯穿部分工作", "AI 独立推进较完整任务，我负责关键决策", "多个 AI 工具/代理按流程协同"]
+      },
+      {
+        title: "你会把有效的 AI 用法沉淀下来吗？",
+        options: ["没有", "偶尔分享提示词或回答", "复用自己验证有效的方法", "建立模板或步骤清单供自己/团队复用", "持续优化团队级 AI 流程并衡量效果"]
+      }
+    ],
+    levels: [
+      ["Level 0 · 尚未使用", "目前还没有把 AI 纳入日常工作。", "从一个低风险、重复性的小任务开始。"],
+      ["Level 1 · AI 工具使用者", "你会把 AI 当作随用随开的工具。", "提供更多背景、目标和限制，并核查准确性。"],
+      ["Level 2 · AI 协作伙伴", "你会与 AI 多轮协作，逐步改进成果。", "把常见任务整理成稳定步骤和验收标准。"],
+      ["Level 3 · AI 任务委派者", "你开始把完整任务交给 AI 推进，并负责验收。", "明确任务边界、检查点和失败时的处理方式。"],
+      ["Level 4 · AI 工作流构建者", "你把 AI 融入可复用流程，或协调多个工具。", "衡量质量、时间节省与风险，维护团队流程。"]
+    ]
+  },
+  en: {
+    backText: "← Back to Assessment Hub",
+    pageTitle: "Team AI Usage Level Assessment",
+    pageIntro: "100% Anonymous · 6 Questions · ~2 Minutes. Answer based on your typical daily practices. Results are for learning and collaboration, not performance reviews.",
+    submitBtn: "Submit & View My Level",
+    submittingBtn: "Calculating...",
+    resetBtn: "Clear Answers",
+    confirmReset: "Are you sure you want to clear all answers?",
+    errFillAll: "Please complete all 6 questions before submitting.",
+    statsTitle: "Team Statistics (Admin)",
+    statsIntro: "Enter admin PIN to view aggregate stats. Individual answers are never displayed.",
+    pinPlaceholder: "Admin PIN",
+    statsBtn: "View Statistics",
+    readingStats: "Loading...",
+    footerNote: "This survey does not collect names or emails. Do not enter personal identity info.",
+    resLabel: "Your Assessment Result",
+    adviceLabel: "Growth Recommendation:",
+    resFoot: "Level is rounded from the 6-question average score for self-reflection purposes.",
+    statTotal: "Total Submissions",
+    statAvg: "Team Average Score",
+    statDist: "Level Distribution",
+    statQAvg: "Question Average Scores",
+    statUnit: "submissions",
+    statNote: "Repeat submissions are counted individually.",
+    questions: [
+      {
+        title: "How frequently do you use AI tools in your work?",
+        options: [
+          "Rarely or never use AI",
+          "Occasionally search information or ask quick questions",
+          "Frequently draft, analyze, or refine work with AI",
+          "Daily use, delegating multiple core tasks to AI",
+          "AI is embedded in daily routines using multiple tools"
+        ]
+      },
+      {
+        title: "How do you usually prompt or instruct AI?",
+        options: [
+          "Do not use or minimal usage",
+          "Ask simple one-off questions and read answers directly",
+          "Provide context, goals, and constraints across multi-turn prompts",
+          "Hand off full tasks for AI to break down and execute",
+          "Engineer reusable prompt templates, rules, and structured workflows"
+        ]
+      },
+      {
+        title: "How do you handle AI's initial outputs or drafts?",
+        options: [
+          "Not applicable / Rarely use",
+          "Skim briefly and use directly",
+          "Review, correct, and iteratively polish",
+          "Have AI self-critique, test, and revise before final sign-off",
+          "Apply standardized verification criteria or automated validation"
+        ]
+      },
+      {
+        title: "Do you delegate multi-step projects to AI?",
+        options: [
+          "No, not at all",
+          "Only for a single isolated sub-step",
+          "I manually break down steps and coordinate AI sequentially",
+          "AI plans and executes multi-steps while I supervise and verify",
+          "Use repeatable, tool-connected multi-agent or automation pipelines"
+        ]
+      },
+      {
+        title: "What role does AI play in your workflow?",
+        options: [
+          "Virtually no role",
+          "Ad-hoc tool opened when occasionally needed",
+          "Collaborative thought partner throughout key tasks",
+          "Autonomous executor of complete tasks; I make strategic decisions",
+          "Multiple AI agents and tools orchestrating structured workflows"
+        ]
+      },
+      {
+        title: "Do you document and institutionalize effective AI practices?",
+        options: [
+          "No documentation",
+          "Occasionally share a prompt or answer with peers",
+          "Re-use personal verified prompts and methods",
+          "Build templates or step-by-step SOPs for self and team",
+          "Continuously optimize team-wide AI pipelines and track impact"
+        ]
+      }
+    ],
+    levels: [
+      ["Level 0 · Not Yet Used", "AI is not yet integrated into daily workflows.", "Start by exploring a low-risk, repetitive small task."],
+      ["Level 1 · AI Tool User", "You treat AI as an on-demand quick assistant.", "Provide richer context and constraints, and always verify accuracy."],
+      ["Level 2 · AI Thought Partner", "You iterate multi-turn dialogues to refine outcomes.", "Document effective tasks into standard steps and acceptance criteria."],
+      ["Level 3 · AI Task Delegator", "You delegate complete multi-step tasks to AI and verify.", "Establish clear boundaries, checkpoints, and fallback strategies."],
+      ["Level 4 · AI Workflow Builder", "AI is embedded into reusable multi-tool pipelines.", "Track quality, time-savings, safety, and maintain shared playbooks."]
+    ]
+  },
+  th: {
+    backText: "← กลับสู่ศูนย์กลางการประเมิน",
+    pageTitle: "แบบประเมินระดับการใช้งาน AI ในทีม",
+    pageIntro: "ไม่เปิดเผยตัวตน · 6 ข้อ · ประมาณ 2 นาที โปรดตอบตามวิธีปฏิบัติจริงในปัจจุบัน ผลลัพธ์ใช้เพื่อการเรียนรู้ในทีม ไม่ใช่การประเมินผลงาน",
+    submitBtn: "ส่งคำตอบและดูระดับของฉัน",
+    submittingBtn: "กำลังคำนวณ…",
+    resetBtn: "ล้างคำตอบ",
+    confirmReset: "คุณแน่ใจหรือไม่ว่าต้องการล้างคำตอบทั้งหมด?",
+    errFillAll: "โปรดตอบให้ครบทั้ง 6 ข้อก่อนส่ง",
+    statsTitle: "สถิติทีม (สำหรับผู้ดูแลระบบ)",
+    statsIntro: "ป้อนรหัสผ่านผู้ดูแลระบบเพื่อดูภาพรวม จะไม่แสดงคำตอบรายบุคคล",
+    pinPlaceholder: "รหัสผ่านผู้ดูแลระบบ",
+    statsBtn: "ดูสถิติ",
+    readingStats: "กำลังโหลด…",
+    footerNote: "แบบสอบถามนี้ไม่มีการขอชื่อหรืออีเมล โปรดอย่ากรอกข้อมูลระบุตัวตน",
+    resLabel: "ผลการประเมินของคุณ",
+    adviceLabel: "คำแนะนำในการพัฒนา:",
+    resFoot: "ระดับคำนวณจากคะแนนเฉลี่ย 6 ข้อเพื่อเป็นแนวทางสะท้อนตนเอง",
+    statTotal: "จำนวนที่ส่งทั้งหมด",
+    statAvg: "คะแนนเฉลี่ยของทีม",
+    statDist: "การกระจายของระดับ",
+    statQAvg: "คะแนนเฉลี่ยรายข้อ",
+    statUnit: "ชุด",
+    statNote: "การส่งซ้ำจะถูกนับเป็นหลายชุดข้อมูล",
+    questions: [
+      {
+        title: "คุณใช้เครื่องมือ AI ในการทำงานบ่อยเพียงใด?",
+        options: [
+          "แทบไม่ได้ใช้หรือไม่เคยใช้",
+          "ค้นหาข้อมูลหรือถามคำถามเป็นครั้งคราว",
+          "ใช้ร่าง วิเคราะห์ หรือปรับปรุงงานอย่างสม่ำเสมอ",
+          "ใช้งานทุกวัน และมอบหมายงานสำคัญหลายอย่างให้ AI",
+          "AI ผสานเข้ากับเวิร์กโฟลว์ประจำวันอย่างสมบูรณ์"
+        ]
+      },
+      {
+        title: "โดยปกติคุณสั่งงานหรือป้อนคำสั่งให้ AI อย่างไร?",
+        options: [
+          "ไม่ได้ใช้หรือใช้น้อยมาก",
+          "ถามคำถามสั้นๆ ง่ายๆ และดูคำตอบทันที",
+          "ให้บริบท เป้าหมาย และข้อจำกัด พร้อมโต้ตอบหลายรอบ",
+          "ส่งมอบงานทั้งชิ้นให้ AI แตกขั้นตอนและดำเนินการ",
+          "ออกแบบเทมเพลตคำสั่ง กฎเกณฑ์ และขั้นตอนการทำงานที่ใช้ซ้ำได้"
+        ]
+      },
+      {
+        title: "คุณจัดการกับร่างแรกหรือผลลัพธ์ของ AI อย่างไร?",
+        options: [
+          "ไม่เกี่ยวข้อง / แทบไม่ได้ใช้",
+          "กวาดสายตาดูคร่าวๆ แล้วนำไปใช้ทันที",
+          "ตรวจสอบ แก้ไขข้อผิดพลาด และขัดเกลาหลายรอบ",
+          "ให้ AI ตรวจสอบตนเอง ทดสอบ และแก้ไขก่อนตรวจรับขั้นสุดท้าย",
+          "มีมาตรฐานคุณภาพ เกณฑ์การตรวจสอบ หรือการตรวจสอบอัตโนมัติ"
+        ]
+      },
+      {
+        title: "คุณมอบหมายงานที่มีหลายขั้นตอนให้ AI หรือไม่?",
+        options: [
+          "ไม่เคย",
+          "ให้ AI ทำเฉพาะขั้นตอนย่อยขั้นตอนเดียว",
+          "แบ่งขั้นตอนด้วยตนเองแล้วประสานงานกับ AI ทีละขั้น",
+          "AI วางแผนและดำเนินการหลายขั้นตอน โดยฉันควบคุมและตรวจรับ",
+          "ใช้เวิร์กโฟลว์อัตโนมัติหรือ Multi-agent ที่เชื่อมต่อเครื่องมือ"
+        ]
+      },
+      {
+        title: "AI อยู่ในตำแหน่งใดในกระบวนการทำงานของคุณ?",
+        options: [
+          "แทบไม่มีบทบาท",
+          "เปิดใช้เฉพาะกิจเมื่อต้องการ",
+          "เป็นคู่หูร่วมคิดและร่วมทำงานตลอดกระบวนการสำคัญ",
+          "AI ดำเนินการงานชิ้นสมบูรณ์อย่างอิสระ โดยฉันตัดสินใจเชิงกลยุทธ์",
+          "เครื่องมือและเอเจนต์ AI หลายตัวทำงานร่วมกันตามขั้นตอน"
+        ]
+      },
+      {
+        title: "คุณได้บันทึกและถ่ายทอดวิธีใช้ AI ที่มีประสิทธิภาพหรือไม่?",
+        options: [
+          "ไม่ได้ทำ",
+          "แบ่งปันคำสั่งหรือคำตอบให้เพื่อนร่วมงานบ้างเป็นครั้งคราว",
+          "นำคำสั่งหรือวิธีที่ตนเองพิสูจน์แล้วกลับมาใช้ซ้ำ",
+          "สร้างเทมเพลตหรือคู่มือ SOP ให้ตนเองและทีมใช้งานร่วมกัน",
+          "พัฒนาและวัดผลเวิร์กโฟลว์ AI ระดับทีมอย่างต่อเนื่อง"
+        ]
+      }
+    ],
+    levels: [
+      ["Level 0 · ยังไม่ได้ใช้งาน", "ยังไม่ได้นำ AI เข้ามาเป็นส่วนหนึ่งของการทำงานประจำวัน", "เริ่มต้นจากงานเล็กๆ ที่มีความเสี่ยงต่ำและทำซ้ำบ่อย"],
+      ["Level 1 · ผู้ใช้งานเครื่องมือ AI", "คุณมอง AI เป็นเครื่องมือเปิดใช้ตามความต้องการเฉพาะหน้า", "ระบุบริบท ข้อจำกัดให้ชัดเจนขึ้น และตรวจสอบความถูกต้องเสมอ"],
+      ["Level 2 · คู่หูร่วมงาน AI", "คุณทำงานร่วมกับ AI หลายรอบเพื่อขัดเกลาผลลัพธ์", "รวบรวมงานที่พบบ่อยให้เป็นขั้นตอนมาตรฐานและมีเกณฑ์ตรวจรับ"],
+      ["Level 3 · ผู้มอบหมายงานให้ AI", "คุณมอบหมายงานทั้งชิ้นให้ AI และดูแลตรวจรับผลลัพธ์", "กำหนดขอบเขต จุดตรวจสอบ และแผนสำรองให้ชัดเจน"],
+      ["Level 4 · ผู้สร้างเวิร์กโฟลว์ AI", "คุณนำ AI เข้าสู่กระบวนการอัตโนมัติที่ใช้ซ้ำได้", "วัดผลคุณภาพ การประหยัดเวลา ความปลอดภัย และดูแลคู่มือของทีม"]
+    ]
+  }
+};
+
+let currentLang = "zh";
+
+function renderQuestions() {
+  const t = I18N[currentLang] || I18N.zh;
+  const qroot = document.querySelector("#qs");
+  // preserve existing answers if user already selected
+  const existingAnswers = [];
+  t.questions.forEach((_, i) => {
+    const checked = document.querySelector(`[name=q${i}]:checked`);
+    existingAnswers[i] = checked ? checked.value : null;
+  });
+
+  qroot.innerHTML = "";
+  t.questions.forEach((q, i) => {
+    const s = document.createElement("section");
+    s.className = "q";
+    const titleSpan = document.createElement("span");
+    titleSpan.className = "q-title";
+    titleSpan.textContent = `${i + 1}. ${q.title}`;
+    s.appendChild(titleSpan);
+
+    const optsDiv = document.createElement("div");
+    optsDiv.className = "opts";
+
+    q.options.forEach((optText, j) => {
+      const l = document.createElement("label");
+      l.className = "opt-label";
+      const isChecked = existingAnswers[i] !== null && Number(existingAnswers[i]) === j;
+      l.innerHTML = `<input required type="radio" name="q${i}" value="${j}" ${isChecked ? "checked" : ""}> <span><strong>${String.fromCharCode(65 + j)}.</strong> ${optText}</span>`;
+      optsDiv.appendChild(l);
+    });
+    s.appendChild(optsDiv);
+    qroot.appendChild(s);
+  });
+}
+
+function setLanguage(lang) {
+  currentLang = I18N[lang] ? lang : "zh";
+  const t = I18N[currentLang];
+  document.documentElement.lang = currentLang === "zh" ? "zh-CN" : currentLang;
+  document.getElementById("backLink").textContent = t.backText;
+  document.getElementById("backLink").href = `${PORTAL_BASE}?lang=${currentLang}`;
+  document.getElementById("pageTitle").textContent = t.pageTitle;
+  document.getElementById("pageIntro").textContent = t.pageIntro;
+  document.getElementById("submit").textContent = t.submitBtn;
+  document.getElementById("resetBtn").textContent = t.resetBtn;
+  document.getElementById("statsTitle").textContent = t.statsTitle;
+  document.getElementById("statsIntro").textContent = t.statsIntro;
+  document.getElementById("pin").placeholder = t.pinPlaceholder;
+  document.getElementById("statsBtn").textContent = t.statsBtn;
+  document.getElementById("footerNote").textContent = t.footerNote;
+
+  renderQuestions();
+
+  // If result is currently visible, update result text
+  const resEl = document.getElementById("result");
+  if (!resEl.classList.contains("hidden") && resEl.dataset.level !== undefined) {
+    displayResult(+resEl.dataset.level, +resEl.dataset.avg);
+  }
+
+  try { localStorage.setItem("ai_survey_lang", currentLang); } catch(e){}
+}
+
+function displayResult(level, avg) {
+  const t = I18N[currentLang] || I18N.zh;
+  const resEl = document.getElementById("result");
+  resEl.dataset.level = level;
+  resEl.dataset.avg = avg;
+  const x = t.levels[level];
+  resEl.innerHTML = `
+    <div class="muted">${t.resLabel}</div>
+    <div class="level">${x[0]}</div>
+    <p style="margin: 8px 0; font-size: 15px;">${x[1]}</p>
+    <p style="margin: 8px 0; line-height: 1.6;"><strong>${t.adviceLabel}</strong>${x[2]}</p>
+    <p class="muted" style="font-size: 13px; margin-top: 10px;">${t.resFoot}</p>
+  `;
+  resEl.classList.remove("hidden");
+}
+
+document.getElementById("resetBtn").onclick = () => {
+  const t = I18N[currentLang] || I18N.zh;
+  if (confirm(t.confirmReset)) {
+    document.getElementById("form").reset();
+    const resEl = document.getElementById("result");
+    resEl.classList.add("hidden");
+    delete resEl.dataset.level;
+    delete resEl.dataset.avg;
+    document.getElementById("err").classList.add("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
+
+document.getElementById("form").onsubmit = async (e) => {
+  e.preventDefault();
+  const t = I18N[currentLang] || I18N.zh;
+  const answers = t.questions.map((_, i) => {
+    const r = document.querySelector(`[name=q${i}]:checked`);
+    return r ? +r.value : null;
+  });
+  const err = document.getElementById("err");
+  err.classList.add("hidden");
+  if (answers.some(x => x === null)) {
+    err.textContent = t.errFillAll;
+    err.classList.remove("hidden");
+    return;
+  }
+  const b = document.getElementById("submit");
+  b.disabled = true;
+  b.textContent = t.submittingBtn;
+  try {
+    const r = await fetch("/api/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answers })
+    });
+    const d = await r.json();
+    if (!r.ok) throw Error(d.error || "Submission failed");
+    displayResult(d.level, d.averageScore);
+    document.getElementById("result").scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch(x) {
+    err.textContent = x.message;
+    err.classList.remove("hidden");
+  } finally {
+    b.disabled = false;
+    b.textContent = t.submitBtn;
+  }
+};
+
+document.getElementById("statsBtn").onclick = async () => {
+  const t = I18N[currentLang] || I18N.zh;
+  const err = document.getElementById("serr"), box = document.getElementById("stats");
+  err.classList.add("hidden");
+  box.classList.add("hidden");
+  const b = document.getElementById("statsBtn");
+  b.disabled = true;
+  b.textContent = t.readingStats;
+  try {
+    const r = await fetch("/api/stats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pin: document.getElementById("pin").value })
+    });
+    const d = await r.json();
+    if (!r.ok) throw Error(d.error || "Failed to load stats");
+    let h = `
+      <div class="result">
+        <b>${t.statTotal}: ${d.total} ${t.statUnit}</b>
+        <p style="margin: 4px 0 0;">${t.statAvg}: ${d.averageScore} / 4</p>
+      </div>
+      <h3 style="font-size: 16px; margin: 16px 0 8px;">${t.statDist}</h3>
+    `;
+    d.levels.forEach((n, i) => {
+      const p = d.total ? Math.round(n / d.total * 100) : 0;
+      h += `
+        <div class="stat">
+          <span>Level ${i}</span>
+          <div class="bar"><div class="fill" style="width:${p}%"></div></div>
+          <span>${n} ${t.statUnit}</span>
+        </div>
+      `;
+    });
+    h += `<h3 style="font-size: 16px; margin: 16px 0 8px;">${t.statQAvg}</h3><ol style="padding-left: 20px; font-size: 13.5px; line-height: 1.8;">` +
+      d.questionAverages.map((v, i) => `<li>Q${i + 1}: ${v} / 4</li>`).join("") +
+      `</ol><p class="muted" style="font-size: 12.5px;">${t.statNote}</p>`;
+    box.innerHTML = h;
+    box.classList.remove("hidden");
+  } catch(x) {
+    err.textContent = x.message;
+    err.classList.remove("hidden");
+  } finally {
+    b.disabled = false;
+    b.textContent = t.statsBtn;
+  }
+};
+
+const urlLang = new URLSearchParams(window.location.search).get("lang");
+const savedLang = (typeof localStorage !== "undefined" && localStorage.getItem("ai_survey_lang"));
+const select = document.getElementById("langSelect");
+select.value = I18N[urlLang] ? urlLang : (I18N[savedLang] ? savedLang : "zh");
+setLanguage(select.value);
+
+select.addEventListener("change", (e) => {
+  setLanguage(e.target.value);
+});
+</script>
+</body>
+</html>

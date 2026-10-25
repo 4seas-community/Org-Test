@@ -1,0 +1,14 @@
+{
+  "name": "org-survey-portal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy:portal": "wrangler deploy",
+    "deploy:ai": "cd cloudflare_ai_level_survey && wrangler deploy",
+    "deploy:mbti": "cd cloudflare_mbti_workstyle_survey_trilingual_notice && wrangler deploy",
+    "deploy:all": "pnpm deploy:portal && pnpm deploy:ai && pnpm deploy:mbti"
+  },
+  "devDependencies": {
+    "wrangler": "^4.152.0"
+  }
+}

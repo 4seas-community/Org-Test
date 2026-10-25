@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "team-communication-preferences",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-25",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    "ADMIN_PIN": "admin888"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "org-mbti-survey-db",
+      "database_id": "ee122495-f6b5-4560-8212-ca5f7118864b"
+    }
+  ]
+}

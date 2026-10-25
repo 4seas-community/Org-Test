@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>团队沟通偏好自评 · Team Communication Preferences</title>
+  <style>
+    :root {
+      --primary: #315bd6;
+      --primary-hover: #2246b0;
+      --bg: #f4f6fb;
+      --card-bg: #ffffff;
+      --text-main: #182033;
+      --text-muted: #667085;
+      --border: #e1e6ef;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px 16px 40px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--text-main);
+      background: var(--bg);
+    }
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .back-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .langbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+    .langbar select {
+      padding: 7px 10px;
+      border: 1px solid #ccd3e0;
+      border-radius: 8px;
+      background: white;
+      font-size: 13.5px;
+      cursor: pointer;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      margin: 0 0 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(24px, 4vw, 32px);
+      color: #0f172a;
+    }
+    h2 { margin-top: 0; font-size: 20px; }
+    .muted {
+      color: var(--text-muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+    .noticebox {
+      border: 1px solid #f3c56a;
+      background: linear-gradient(135deg, #fff8e7, #fff);
+      border-radius: 13px;
+      padding: 16px 18px;
+      margin: 16px 0;
+    }
+    .noticehead {
+      font-size: 16.5px;
+      font-weight: 800;
+      color: #9a3412;
+      margin-bottom: 8px;
+    }
+    .noticebox p {
+      margin: 8px 0;
+      line-height: 1.65;
+      font-size: 13.5px;
+    }
+    .noticeblue { color: #1d4ed8; }
+    .noticegreen { color: #047857; }
+    .noticepurple { color: #7c3aed; }
+    .noticeorange { color: #b45309; }
+    .progress-wrap {
+      position: sticky;
+      top: 10px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin: 16px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .progress {
+      height: 8px;
+      background: #e8ecf4;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 6px 0 0;
+    }
+    .fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.2s ease;
+    }
+    .item {
+      padding: 18px 0;
+      border-top: 1px solid #edf0f5;
+    }
+    .item:first-child { border-top: 0; }
+    .item p {
+      font-weight: 650;
+      font-size: 15px;
+      margin: 0 0 12px;
+      line-height: 1.5;
+      color: #1e293b;
+    }
+    .scale {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+    .scale label {
+      text-align: center;
+      border: 1px solid #dfe4ed;
+      border-radius: 9px;
+      padding: 9px 4px;
+      font-size: 13px;
+      cursor: pointer;
+      background: #fafbfc;
+      transition: all 0.15s ease;
+    }
+    .scale label:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    .scale label:has(input:checked) {
+      background: #eef3ff;
+      border-color: var(--primary);
+      color: #1d4ed8;
+      font-weight: 600;
+    }
+    .scale input {
+      display: block;
+      margin: 0 auto 6px;
+      accent-color: var(--primary);
+    }
+    .scale .val-num {
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .scale .val-desc {
+      font-size: 11.5px;
+      display: block;
+      margin-top: 2px;
+      line-height: 1.25;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 20px;
+    }
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 20px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 14.5px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    button:hover { background: var(--primary-hover); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .secondary {
+      background: #e8edf6;
+      color: #182033;
+    }
+    .secondary:hover { background: #dce3f0; }
+    .hidden { display: none; }
+    .result {
+      background: #f0f5ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 22px;
+      margin-top: 20px;
+    }
+    .type {
+      font-size: 34px;
+      font-weight: 850;
+      letter-spacing: 2px;
+      color: #1d4ed8;
+      margin: 4px 0 10px;
+    }
+    .axis {
+      margin: 18px 0;
+      padding: 12px 14px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+    }
+    .axisline {
+      height: 12px;
+      background: #e9edf5;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+    .axisfill {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+    .err {
+      color: #b42318;
+      font-weight: 600;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    input[type=password] {
+      padding: 10px 12px;
+      border: 1px solid #ccd3e0;
+      border-radius: 8px;
+      max-width: 250px;
+      width: 100%;
+      font-size: 14px;
+      outline: none;
+    }
+    footer {
+      font-size: 12.5px;
+      color: #7a8498;
+      padding: 16px 0;
+      text-align: center;
+    }
+    @media(max-width: 600px) {
+      body { padding: 12px 8px 30px; }
+      .card { padding: 16px 14px; }
+      .scale label { font-size: 11px; padding: 6px 1px; }
+      .scale .val-desc { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div class="topbar">
+    <a href="https://org-survey-portal.jhfnetboy.workers.dev" id="backLink" class="back-link">&larr; 返回组织调研中心首页</a>
+    <div class="langbar">
+      <label for="language">Language / 语言 / ภาษา:</label>
+      <select id="language">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+        <option value="th">ไทย</option>
+      </select>
+    </div>
+  </div>
+
+  <section class="card">
+    <h1 id="mainTitle">团队沟通偏好自评</h1>
+    <div class="noticebox" id="noticebox">
+      <div class="noticehead" id="noticeTitle">开始前，请先了解这份问卷的目的</div>
+      <p class="noticeblue" id="notice1"></p>
+      <p class="noticegreen" id="notice2"></p>
+      <p class="noticepurple" id="notice3"></p>
+      <p class="noticeorange" id="notice4"></p>
+    </div>
+    <p class="muted" id="surveySubtitle">104 道原创陈述 · 预计 30–45 分钟 · 匿名填写。请根据你在多数工作情境中的真实倾向作答，而不是你认为“应该怎样”。没有好坏答案。</p>
+    <p class="muted" id="surveyNotice"><b>重要：</b>这是参考 MBTI 四组偏好维度设计的内部沟通反思工具，不是官方 MBTI® 测评，也不用于招聘、绩效或人员筛选。人格偏好不是能力高低，结果只作为协作对话的起点。</p>
+
+    <div class="progress-wrap">
+      <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; color:#475569;">
+        <span id="progressText">已回答 0 / 104</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress"><div class="fill" id="progress"></div></div>
+    </div>
+  </section>
+
+  <form id="form">
+    <div class="card">
+      <div id="questions"></div>
+      <div class="actions">
+        <button id="submit" type="submit">提交并查看个人报告</button>
+        <button type="button" class="secondary" id="clear">清空答案</button>
+      </div>
+      <p id="error" class="err hidden"></p>
+      <div id="result" class="result hidden"></div>
+    </div>
+  </form>
+
+  <section class="card">
+    <h2 id="statsHead">团队汇总（管理员）</h2>
+    <p class="muted" id="statsSub">输入管理员口令查看团队维度分布。统计只展示汇总，不展示个人答卷。</p>
+    <div class="actions" style="margin-top: 10px;">
+      <input id="pin" type="password" placeholder="管理员口令">
+      <button id="statsBtn" type="button">查看团队统计</button>
+    </div>
+    <p id="statsError" class="err hidden"></p>
+    <div id="stats" class="hidden"></div>
+  </section>
+
+  <footer id="footerNote">匿名仅表示不要求姓名/邮箱；托管平台仍可能处理技术日志。请不要在任何自由文本中输入身份信息。</footer>
+</main>
+
+<script>
+const PORTAL_BASE = "https://org-survey-portal.jhfnetboy.workers.dev";
+
+const INTRO = {
+  zh: {
+    backText: "← 返回组织调研中心首页",
+    title: "团队沟通偏好自评 (MBTI 维度)",
+    head: "开始前，请先了解这份问卷的目的",
+    p1: "这不是给任何人贴标签，也不是判断谁更好、谁更适合某个岗位。我们想了解的是：每个人在沟通、获取信息、做决定和安排工作时，通常更偏好的方式是什么。",
+    p2: "了解彼此的偏好，可以帮助我们调整沟通方式、减少误解、发挥各自优势，让团队协作更顺畅。不同偏好没有高低之分，也不代表能力、价值观或工作表现。",
+    p3: "请按你大多数时候的真实感受作答，而不是理想中的自己。结果只是自我反思和团队交流的起点；人会随情境变化，也可能在不同维度上都很灵活。",
+    p4: "本问卷参考常见人格偏好框架设计，属于内部沟通发展工具，并非官方 MBTI® 测评或临床心理测验。结果不应用于招聘、晋升、绩效评价或人员筛选。",
+    subtitle: "104 道原创工作情境题 · 预计 30–45 分钟 · 匿名填写。请按真实偏好作答，没有对错优劣。",
+    notice: "<b>重要：</b>本工具参考 MBTI 四维偏好模型设计，仅用于内部协作反思，绝不作为招聘或绩效评估依据。",
+    progress: (n, total) => `已回答 ${n} / ${total}`,
+    submitBtn: "提交并查看个人报告",
+    submittingBtn: "正在计算…",
+    clearBtn: "清空答案",
+    confirmClear: "确定清空全部答案？",
+    errIncomplete: "请完成全部 104 道题后再提交。",
+    statsHead: "团队汇总（管理员）",
+    statsSub: "输入管理员口令查看团队维度分布。统计只展示汇总，不展示个人答卷。",
+    pinPlaceholder: "管理员口令",
+    statsBtn: "查看团队统计",
+    readingStats: "正在读取…",
+    footerNote: "本问卷完全匿名，不采集姓名或邮箱。结果仅供团队学习沟通。",
+    reportLabel: "你的沟通偏好轮廓（非官方 MBTI 结果）",
+    adviceLabel: "协作建议",
+    reportFoot: "结果仅反映本次自评的相对倾向。若某个维度接近 50/50，说明你在该维度具备情境灵活性。",
+    statTotal: (n) => `累计答卷：${n} 份`,
+    statAvgText: "四维团队平均倾向（百分比）",
+    statTypesHead: "16 种人格组合分布（探索性统计）",
+    statTypesFoot: "小样本统计仅供讨论，不应用于评价或筛选同事。",
+    labels: {1:'非常不同意',2:'不同意',3:'不确定 / 中立',4:'同意',5:'非常同意'},
+    dims: {
+      EI: { left: "E 外向互动", right: "I 内向思考", note: "E 倾向通过互动整理思路；I 倾向先独立思考、再交流。两者都能有效协作。" },
+      SN: { left: "S 具体事实", right: "N 整体可能", note: "S 倾向具体证据、细节和可执行步骤；N 倾向模式、趋势和潜在可能。" },
+      TF: { left: "T 逻辑标准", right: "F 人与价值", note: "T 倾向逻辑一致性和明确标准；F 倾向人员影响、价值和关系质量。" },
+      JP: { left: "J 计划结构", right: "P 灵活探索", note: "J 倾向计划、收敛和明确行动；P 倾向保留选择、适应变化和持续探索。" }
+    },
+    names: {"E":"更偏互动表达","I":"更偏独立思考","S":"更偏具体事实","N":"更偏整体可能","T":"更偏逻辑标准","F":"更偏人员与价值","J":"更偏计划结构","P":"更偏灵活探索"},
+    tips: {
+      E:"安排讨论时给外向倾向同事实时交流机会，同时把关键结论书面沉淀。",
+      I:"提前分享议题，并给内向倾向同事独立思考和书面反馈的时间。",
+      S:"说明背景时提供事实、例子、限制和明确交付物。",
+      N:"说明任务时补充目标、整体方向，以及允许探索的空间。",
+      T:"反馈时讲清证据、标准和改进动作，避免把问题个人化。",
+      F:"反馈时说明影响、倾听顾虑，并保留尊重与理解的空间。",
+      J:"协作时尽早明确负责人、时间点、优先级和决策节点。",
+      P:"协作时说明哪些内容可调整、哪些是硬性约束，并留出探索空间。"
+    }
+  },
+  en: {
+    backText: "← Back to Assessment Hub",
+    title: "Team Communication Preferences (MBTI)",
+    head: "Before you begin: The purpose of this questionnaire",
+    p1: "This is not about labeling people or determining who is suited for a role. We want to understand how each person typically prefers communicating, gathering information, deciding, and structuring work.",
+    p2: "Understanding preferences helps adjust communication, reduce misunderstandings, and leverage everyone's strengths. No preference is superior, and none reflects capability or value.",
+    p3: "Answer according to your typical feelings in most work settings, not an idealized self. The profile is a springboard for self-reflection and team dialogue.",
+    p4: "Inspired by common personality preference frameworks, this is an internal collaboration tool—not an official MBTI® assessment or clinical test. Never use it for hiring, promotion, or screening.",
+    subtitle: "104 Work Scenario Statements · ~30–45 Minutes · 100% Anonymous. Answer based on natural tendencies; there are no right or wrong answers.",
+    notice: "<b>Important:</b> This internal reflection tool is inspired by MBTI preference dimensions. It is not for hiring, performance evaluation, or screening.",
+    progress: (n, total) => `Answered ${n} / ${total}`,
+    submitBtn: "Submit & View Personal Report",
+    submittingBtn: "Calculating...",
+    clearBtn: "Clear Answers",
+    confirmClear: "Are you sure you want to clear all answers?",
+    errIncomplete: "Please complete all 104 questions before submitting.",
+    statsHead: "Team Aggregate Summary (Admin)",
+    statsSub: "Enter admin PIN to view team dimension distribution. Only aggregate stats are shown.",
+    pinPlaceholder: "Admin PIN",
+    statsBtn: "View Team Statistics",
+    readingStats: "Loading...",
+    footerNote: "Completely anonymous. No names or emails collected. For learning and dialogue only.",
+    reportLabel: "Your Communication Profile (Unofficial MBTI Result)",
+    adviceLabel: "Collaboration Recommendations",
+    reportFoot: "Results reflect relative tendencies. A near 50/50 balance indicates contextual flexibility.",
+    statTotal: (n) => `Total Responses: ${n}`,
+    statAvgText: "Four-Dimension Team Averages (%)",
+    statTypesHead: "16 Type Combinations Distribution",
+    statTypesFoot: "Small-sample stats are for discussion only, never for evaluation or screening.",
+    labels: {1:'Strongly Disagree', 2:'Disagree', 3:'Neutral', 4:'Agree', 5:'Strongly Agree'},
+    dims: {
+      EI: { left: "E Extraversion", right: "I Introversion", note: "E tends to talk out thoughts; I prefers independent reflection before sharing." },
+      SN: { left: "S Sensing (Facts)", right: "N Intuition (Possibilities)", note: "S prefers concrete facts and actionable steps; N gravitates to patterns and potential." },
+      TF: { left: "T Thinking (Logic)", right: "F Feeling (Values)", note: "T values consistency and explicit standards; F prioritizes human impact and harmony." },
+      JP: { left: "J Judging (Structure)", right: "P Perceiving (Flexibility)", note: "J prefers milestones and early closure; P keeps options open to adapt fluidly." }
+    },
+    names: {"E":"Interaction-oriented","I":"Reflection-oriented","S":"Fact-focused","N":"Big-picture focused","T":"Logic-driven","F":"Values-driven","J":"Structured planning","P":"Adaptive exploration"},
+    tips: {
+      E:"Offer real-time speaking opportunities while documenting key takeaways in writing.",
+      I:"Share agendas in advance and grant quiet time for written feedback.",
+      S:"Provide concrete data, real examples, constraints, and clear deliverables.",
+      N:"Explain broader vision, ultimate purpose, and leave room for exploration.",
+      T:"Frame feedback around standards, logic, and actionable steps without personalizing.",
+      F:"Highlight human impact, listen empathetically, and respect personal considerations.",
+      J:"Clarify owners, milestones, deadlines, and decision points as early as possible.",
+      P:"Clarify which constraints are firm vs. flexible, leaving room for iterative pivots."
+    }
+  },
+  th: {
+    backText: "← กลับสู่ศูนย์กลางการประเมิน",
+    title: "แบบประเมินความชอบในการสื่อสารของทีม (MBTI)",
+    head: "ก่อนเริ่ม: จุดประสงค์ของแบบสอบถามนี้",
+    p1: "แบบสอบถามนี้ไม่ได้มีไว้ติดป้ายหรือตัดสินว่าใครเหมาะกับตำแหน่งใด เราต้องการเข้าใจว่าคนแต่ละคนมักชอบสื่อสาร รับข้อมูล ตัดสินใจ และจัดระเบียบงานอย่างไร",
+    p2: "การเข้าใจความชอบของกันและกันช่วยปรับวิธีสื่อสาร ลดความเข้าใจผิด และดึงจุดแข็งมาใช้ร่วมกัน ไม่มีความชอบแบบใดที่ดีกว่ากัน และไม่ตัดสินความสามารถ",
+    p3: "โปรดตอบตามความรู้สึกจริงในสถานการณ์ทำงานส่วนใหญ่ ไม่ใช่ตัวตนในอุดมคติ ผลลัพธ์เป็นจุดเริ่มต้นในการทบทวนตนเองและแลกเปลี่ยนในทีม",
+    p4: "เครื่องมือนี้อ้างอิงกรอบความชอบทางบุคลิกภาพทั่วไปสำหรับการพัฒนาภายใน ไม่ใช่แบบทดสอบทางการแพทย์ ห้ามใช้เพื่อการประเมินผลงาน เลื่อนขั้น หรือคัดกรองพนักงาน",
+    subtitle: "104 ข้อคำถามเกี่ยวกับสถานการณ์ทำงาน · ~30–45 นาที · ไม่เปิดเผยตัวตน โปรดตอบตามความรู้สึกจริง ไม่มีคำตอบถูกหรือผิด",
+    notice: "<b>สำคัญ:</b> เครื่องมือนี้จัดทำขึ้นเพื่อส่งเสริมการทำงานร่วมกัน โดยอ้างอิง 4 มิติความชอบ ห้ามใช้เพื่อการประเมินผลงานหรือคัดเลือกบุคลากร",
+    progress: (n, total) => `ตอบแล้ว ${n} / ${total}`,
+    submitBtn: "ส่งคำตอบและดูรายงานส่วนบุคคล",
+    submittingBtn: "กำลังคำนวณ…",
+    clearBtn: "ล้างคำตอบ",
+    confirmClear: "คุณแน่ใจหรือไม่ว่าต้องการล้างคำตอบทั้งหมด?",
+    errIncomplete: "โปรดตอบให้ครบทั้ง 104 ข้อก่อนส่ง",
+    statsHead: "สรุปภาพรวมของทีม (สำหรับผู้ดูแลระบบ)",
+    statsSub: "ป้อนรหัสผ่านผู้ดูแลระบบเพื่อดูการกระจายตัวของทีม จะไม่แสดงคำตอบรายบุคคล",
+    pinPlaceholder: "รหัสผ่านผู้ดูแลระบบ",
+    statsBtn: "ดูสถิติทีม",
+    readingStats: "กำลังโหลด…",
+    footerNote: "ไม่เปิดเผยตัวตน 100% ไม่มีการบันทึกชื่อหรืออีเมล ข้อมูลใช้เพื่อการพัฒนาทีมเท่านั้น",
+    reportLabel: "โปรไฟล์ความชอบในการสื่อสารของคุณ (ไม่เป็นทางการ)",
+    adviceLabel: "คำแนะนำในการร่วมงาน",
+    reportFoot: "ผลลัพธ์สะท้อนความโน้มเอียงสัมพัทธ์ หากมิติใดใกล้เคียง 50/50 แสดงถึงความยืดหยุ่นตามสถานการณ์",
+    statTotal: (n) => `จำนวนผู้ตอบทั้งหมด: ${n} ชุด`,
+    statAvgText: "ค่าเฉลี่ย 4 มิติของทีม (%)",
+    statTypesHead: "การกระจายตัว 16 รูปแบบบุคลิกภาพ",
+    statTypesFoot: "สถิติกลุ่มตัวอย่างขนาดเล็กใช้เพื่อการพูดคุยเท่านั้น ห้ามใช้ประเมินพนักงาน",
+    labels: {1:'ไม่เห็นด้วยอย่างยิ่ง', 2:'ไม่เห็นด้วย', 3:'เป็นกลาง', 4:'เห็นด้วย', 5:'เห็นด้วยอย่างยิ่ง'},
+    dims: {
+      EI: { left: "E การสื่อสารภายนอก", right: "I การคิดทบทวนภายใน", note: "E ชอบแลกเปลี่ยนความคิดผ่านการสนทนา; I ชอบคิดทบทวนตามลำพังก่อนสื่อสาร" },
+      SN: { left: "S ข้อเท็จจริงและรูปธรรม", right: "N ความเป็นไปได้และภาพรวม", note: "S ชอบข้อมูลเชิงประจักษ์และขั้นตอนปฏิบัติ; N ชอบรูปแบบ แนวโน้ม และจินตนาการ" },
+      TF: { left: "T ตรรกะและมาตรฐาน", right: "F คุณค่าและความรู้สึก", note: "T ให้ความสำคัญกับความสมเหตุสมผลและเกณฑ์ที่ชัดเจน; F ให้ความสำคัญกับผลกระทบต่อผู้คนและความสัมพันธ์" },
+      JP: { left: "J การวางแผนโครงสร้าง", right: "P ความยืดหยุ่นและการสำรวจ", note: "J ชอบการวางแผนและสรุปข้อตกลงล่วงหน้า; P ชอบเปิดทางเลือกไว้และปรับตัวตามสถานการณ์" }
+    },
+    names: {"E":"เน้นการพูดคุยโต้ตอบ","I":"เน้นการคิดตามลำพัง","S":"เน้นข้อเท็จจริงรูปธรรม","N":"เน้นภาพรวมและความเป็นไปได้","T":"เน้นตรรกะและมาตรฐาน","F":"เน้นผู้คนและคุณค่า","J":"เน้นแผนงานและกำหนดเวลา","P":"เน้นความยืดหยุ่นและการปรับตัว"},
+    tips: {
+      E:"เปิดโอกาสให้สื่อสารสดๆ ควบคู่กับการสรุปประเด็นเป็นลายลักษณ์อักษร",
+      I:"ส่งวาระการประชุมล่วงหน้า และให้เวลาคิดทบทวนก่อนขอข้อเสนอแนะ",
+      S:"ให้ข้อมูลจริง ตัวอย่างที่เป็นรูปธรรม ข้อจำกัด และผลลัพธ์ที่ชัดเจน",
+      N:"อธิบายเป้าหมายในภาพรวม ทิศทาง และเปิดพื้นที่ให้เสนอความคิดเห็นใหม่ๆ",
+      T:"ให้ข้อเสนอแนะโดยยึดหลักฐาน เกณฑ์มาตรฐาน และแนวทางปรับปรุง ไม่เจาะจงบุคคล",
+      F:"อธิบายผลกระทบต่อคน รับฟังความรู้สึกด้วยความเข้าใจและเคารพซึ่งกันและกัน",
+      J:"ระบุผู้รับผิดชอบ กำหนดเวลาส่งมอบ และจุดตัดสินใจให้ชัดเจนตั้งแต่เนิ่นๆ",
+      P:"ระบุว่าสิ่งใดปรับเปลี่ยนได้และสิ่งใดเป็นข้อจำกัดตายตัว พร้อมเปิดพื้นที่ให้ทดลอง"
+    }
+  }
+};
+
+const ITEMS = [{"dim":"EI","pole":"E","reverse":false,"text":{"zh":"在团队讨论中，我通常会主动开口表达想法。","en":"In team discussions, I usually take the initiative to speak up and share ideas.","th":"ในการอภิปรายของทีม ฉันมักจะเป็นฝ่ายเริ่มพูดและแสดงความคิดเห็นก่อน"}},{"dim":"EI","pole":"I","reverse":false,"text":{"zh":"我通常需要独处一段时间，才能恢复精力。","en":"I usually need some quiet time alone to recharge my energy.","th":"ฉันมักต้องการเวลาอยู่ตามลำพังเพื่อฟื้นฟูพลังงาน"}},{"dim":"SN","pole":"S","reverse":false,"text":{"zh":"我更信任具体事实、数据和可观察的证据。","en":"I place greater trust in concrete facts, data, and observable evidence.","th":"ฉันเชื่อถือข้อเท็จจริง ตัวเลข และหลักฐานเชิงประจักษ์มากกว่า"}},{"dim":"SN","pole":"N","reverse":false,"text":{"zh":"我常会思考一个方案未来可能发展成什么。","en":"I often reflect on what a proposal could evolve into in the future.","th":"ฉันมักจะคิดถึงความเป็นไปได้ที่โครงการจะพัฒนาต่อไปในอนาคต"}},{"dim":"TF","pole":"T","reverse":false,"text":{"zh":"做决定时，我优先比较逻辑、证据和一致性。","en":"When making decisions, I prioritize logic, evidence, and consistency.","th":"เมื่อต้องตัดสินใจ ฉันให้ความสำคัญกับตรรกะ หลักฐาน และความสอดคล้องกันก่อน"}},{"dim":"TF","pole":"F","reverse":false,"text":{"zh":"做决定时，我会认真考虑它对相关人员的影响。","en":"When making decisions, I carefully consider its impact on the people involved.","th":"เมื่อตัดสินใจ ฉันจะพิจารณาผลกระทบที่มีต่อผู้เกี่ยวข้องอย่างรอบคอบ"}},{"dim":"JP","pole":"J","reverse":false,"text":{"zh":"我喜欢提前规划工作，并尽量按计划推进。","en":"I prefer planning work in advance and sticking to the schedule.","th":"ฉันชอบวางแผนงานล่วงหน้าและพยายามดำเนินงานตามแผน"}},{"dim":"JP","pole":"P","reverse":false,"text":{"zh":"我喜欢保留调整计划的空间。","en":"I like keeping room open to adjust plans as needed.","th":"ฉันชอบเปิดพื้นที่ไว้สำหรับปรับเปลี่ยนแผนงานได้ตามความเหมาะสม"}},{"dim":"EI","pole":"E","reverse":true,"text":{"zh":"和同事交流后，我往往更有精力继续工作。","en":"Interacting with colleagues often leaves me feeling energized to work.","th":"หลังจากพูดคุยแลกเปลี่ยนกับเพื่อนร่วมงาน ฉันมักรู้สึกกระปรี้กระเปร่าในการทำงานต่อ"}},{"dim":"EI","pole":"I","reverse":true,"text":{"zh":"我更喜欢先在心里整理好想法，再表达出来。","en":"I prefer sorting out my thoughts internally before speaking out.","th":"ฉันชอบจัดระเบียบความคิดในใจให้เรียบร้อยก่อนที่จะสื่อสารออกมา"}},{"dim":"SN","pole":"S","reverse":true,"text":{"zh":"解释方案时，我会先讲清楚实际步骤。","en":"When explaining a plan, I start by outlining practical, actionable steps.","th":"เมื่ออธิบายแผนงาน ฉันมักจะเริ่มจากขั้นตอนปฏิบัติจริงให้ชัดเจนก่อน"}},{"dim":"SN","pole":"N","reverse":true,"text":{"zh":"我喜欢探索新概念、模式和不同的解释。","en":"I enjoy exploring new concepts, patterns, and alternative perspectives.","th":"ฉันชอบสำรวจแนวคิดใหม่ๆ รูปแบบ และมุมมองการตีความที่หลากหลาย"}},{"dim":"TF","pole":"T","reverse":true,"text":{"zh":"我认为反馈应直接指出问题和改进方向。","en":"I believe feedback should directly identify problems and improvement steps.","th":"ฉันคิดว่าการให้คำติชมควรชี้ตรงไปที่ปัญหาและแนวทางปรับปรุง"}},{"dim":"TF","pole":"F","reverse":true,"text":{"zh":"我会留意反馈的语气是否让对方容易接受。","en":"I pay attention to tone so feedback is constructive and respectful.","th":"ฉันระมัดระวังน้ำเสียงในการให้ข้อเสนอแนะเพื่อให้ผู้ฟังเปิดใจรับได้ง่าย"}},{"dim":"JP","pole":"J","reverse":true,"text":{"zh":"我希望会议有明确议程和预期产出。","en":"I prefer meetings to have a clear agenda and defined deliverables.","th":"ฉันต้องการให้การประชุมมีวาระที่ชัดเจนและมีผลลัพธ์ที่คาดหวังไว้แน่นอน"}},{"dim":"JP","pole":"P","reverse":true,"text":{"zh":"我更喜欢讨论先开放展开，再逐渐收敛。","en":"I prefer discussions to explore broadly before narrowing down.","th":"ฉันชอบให้การสนทนาเปิดกว้างก่อน แล้วค่อยสรุปประเด็นทีหลัง"}},{"dim":"EI","pole":"E","reverse":false,"text":{"zh":"我倾向于边说边整理自己的思路。","en":"I tend to clarify my thinking as I speak aloud.","th":"ฉันมักจะจัดระเบียบความคิดไปพร้อมๆ กับการพูดออกมา"}},{"dim":"EI","pole":"I","reverse":false,"text":{"zh":"处理复杂问题时，我倾向于先独立思考。","en":"When tackling complex problems, I prefer thinking through them independently first.","th":"เมื่อเจอปัญหาที่ซับซ้อน ฉันชอบคิดวิเคราะห์ด้วยตนเองตามลำพังก่อน"}},{"dim":"SN","pole":"S","reverse":false,"text":{"zh":"我喜欢知道任务的具体要求和边界。","en":"I like knowing the precise requirements and scope boundaries of a task.","th":"ฉันชอบที่จะทราบข้อกำหนดและขอบเขตที่แน่นอนของงาน"}},{"dim":"SN","pole":"N","reverse":false,"text":{"zh":"讨论问题时，我会留意事实背后的趋势。","en":"When discussing issues, I pay attention to trends beneath the facts.","th":"เมื่อคุยเรื่องปัญหา ฉันมักจะสังเกตเห็นแนวโน้มที่ซ่อนอยู่เบื้องหลังข้อเท็จจริง"}},{"dim":"TF","pole":"T","reverse":false,"text":{"zh":"我会区分一个人的感受与方案本身的质量。","en":"I separate personal feelings from the objective quality of a proposal.","th":"ฉันสามารถแยกแยะความรู้สึกส่วนตัวออกจากคุณภาพที่แท้จริงของข้อเสนอได้"}},{"dim":"TF","pole":"F","reverse":false,"text":{"zh":"我认为维护信任是团队决策的重要因素。","en":"I view preserving trust and morale as a key factor in team decisions.","th":"ฉันมองว่าการรักษาความไว้วางใจเป็นปัจจัยสำคัญในการตัดสินใจของทีม"}},{"dim":"JP","pole":"J","reverse":false,"text":{"zh":"我倾向于尽早做决定，减少悬而未决的事项。","en":"I prefer deciding early to minimize open, unresolved items.","th":"ฉันมีแนวโน้มที่จะรีบตัดสินใจเพื่อลดประเด็นที่คั่งค้าง"}},{"dim":"JP","pole":"P","reverse":false,"text":{"zh":"我倾向于在探索更多选项后再做决定。","en":"I tend to explore more options before making a final decision.","th":"ฉันชอบสำรวจทางเลือกให้หลากหลายก่อนตัดสินใจขั้นสุดท้าย"}},{"dim":"EI","pole":"E","reverse":true,"text":{"zh":"遇到不确定的问题时，我喜欢找人一起讨论。","en":"When facing ambiguity, I like talking through ideas with others.","th":"เมื่อพบความไม่แน่นอน ฉันชอบปรึกษาหารือกับผู้อื่นเพื่อหาคำตอบ"}},{"dim":"EI","pole":"I","reverse":true,"text":{"zh":"相比大型讨论，我更自在于一对一交流。","en":"I feel more at ease in one-on-one chats than large group meetings.","th":"ฉันรู้สึกสบายใจกับการคุยแบบตัวต่อตัวมากกว่าการประชุมกลุ่มใหญ่"}},{"dim":"SN","pole":"S","reverse":true,"text":{"zh":"我更关注当前可执行的做法，而不是遥远的设想。","en":"I focus more on actionable next steps than distant speculations.","th":"ฉันมุ่งเน้นที่แนวทางปฏิบัติที่ทำได้จริงในปัจจุบันมากกว่าจินตนาการระยะไกล"}},{"dim":"SN","pole":"N","reverse":true,"text":{"zh":"我更关注方向和整体意义，而不只是步骤。","en":"I care more about overarching direction and purpose than just mechanics.","th":"ฉันให้ความสำคัญกับทิศทางและความหมายในภาพรวมมากกว่าเพียงแค่ขั้นตอน"}},{"dim":"TF","pole":"T","reverse":true,"text":{"zh":"遇到分歧时，我倾向于先厘清事实和推理。","en":"When disagreements arise, I first clarify facts and underlying logic.","th":"เมื่อมีความเห็นต่าง ฉันมักเริ่มต้นด้วยการตรวจสอบข้อเท็จจริงและตรรกะ"}},{"dim":"TF","pole":"F","reverse":true,"text":{"zh":"出现分歧时，我会先努力理解各方的感受和需求。","en":"When conflicts occur, I first seek to understand everyone's feelings and needs.","th":"เมื่อเกิดข้อขัดแย้ง ฉันจะพยายามทำความเข้าใจความรู้สึกและความต้องการของแต่ละฝ่ายก่อน"}},{"dim":"JP","pole":"J","reverse":true,"text":{"zh":"我喜欢把任务、负责人和截止时间写清楚。","en":"I like documenting owners, deliverables, and explicit deadlines.","th":"ฉันชอบระบุผู้รับผิดชอบ งาน และกำหนดเวลาส่งมอบให้ชัดเจนเป็นลายลักษณ์อักษร"}},{"dim":"JP","pole":"P","reverse":true,"text":{"zh":"我能适应临时变化，并从中寻找机会。","en":"I readily adapt to sudden shifts and seek opportunities within change.","th":"ฉันปรับตัวกับการเปลี่ยนแปลงกะทันหันได้ดี และมองหาโอกาสใหม่ๆ จากสิ่งนั้น"}},{"dim":"EI","pole":"E","reverse":false,"text":{"zh":"我愿意在较大的会议中分享尚未完全成形的观点。","en":"I feel comfortable sharing early, unpolished ideas in large meetings.","th":"ฉันยินดีที่จะเสนอความคิดเห็นที่ยังไม่สมบูรณ์ในที่ประชุมใหญ่"}},{"dim":"EI","pole":"I","reverse":false,"text":{"zh":"我通常会在发言前仔细斟酌措辞。","en":"I carefully choose my words before speaking.","th":"ฉันมักจะใคร่ครวญถ้อยคำอย่างรอบคอบก่อนที่จะพูด"}},{"dim":"SN","pole":"S","reverse":false,"text":{"zh":"我倾向于使用真实案例来理解问题。","en":"I prefer grounding problem-solving in tangible, real-world case studies.","th":"ฉันมักใช้กรณีศึกษาและตัวอย่างในชีวิตจริงเพื่อทำความเข้าใจปัญหา"}},{"dim":"SN","pole":"N","reverse":false,"text":{"zh":"我喜欢提出尚未被验证的新可能性。","en":"I enjoy proposing novel, unproven possibilities.","th":"ฉันชอบเสนอความเป็นไปได้ใหม่ๆ ที่ยังไม่เคยได้รับการทดสอบมาก่อน"}},{"dim":"TF","pole":"T","reverse":false,"text":{"zh":"我更看重标准是否一致地应用于所有人。","en":"I value consistent standards applied equally across the board.","th":"ฉันให้ความสำคัญกับการใช้มาตรฐานเดียวกันกับทุกคนอย่างเท่าเทียม"}},{"dim":"TF","pole":"F","reverse":false,"text":{"zh":"我会考虑一个决定是否符合团队共同认可的价值。","en":"I evaluate whether a decision aligns with shared team values.","th":"ฉันพิจารณาว่าการตัดสินใจสอดคล้องกับค่านิยมที่ทีมยึดถือร่วมกันหรือไม่"}},{"dim":"JP","pole":"J","reverse":false,"text":{"zh":"我通常会在截止日前安排好进度。","en":"I pace my progress to finish well ahead of deadlines.","th":"ฉันมักจะวางตารางเวลาล่วงหน้าเพื่อให้งานเสร็จก่อนกำหนดเส้นตาย"}},{"dim":"JP","pole":"P","reverse":false,"text":{"zh":"我喜欢根据新信息调整工作方式。","en":"I enjoy adjusting my work rhythm dynamically as new facts arrive.","th":"ฉันชอบปรับเปลี่ยนวิธีการทำงานตามข้อมูลและสถานการณ์ใหม่ๆ"}},{"dim":"EI","pole":"E","reverse":true,"text":{"zh":"我通常能较快地和新同事聊起来。","en":"I usually strike up conversations with new colleagues quickly.","th":"ฉันมักจะเริ่มพูดคุยสร้างความคุ้นเคยกับเพื่อนร่วมงานใหม่ได้อย่างรวดเร็ว"}},{"dim":"EI","pole":"I","reverse":true,"text":{"zh":"我偏好提前收到议题，以便准备自己的看法。","en":"I prefer receiving meeting agendas in advance to prepare my thoughts.","th":"ฉันชอบรับหัวข้อการประชุมล่วงหน้าเพื่อเตรียมความคิดเห็นของตนเอง"}},{"dim":"SN","pole":"S","reverse":true,"text":{"zh":"我会留意细节是否准确、完整。","en":"I pay close attention to whether operational details are accurate and complete.","th":"ฉันจะคอยตรวจสอบว่ารายละเอียดปลีกย่อยมีความถูกต้องและครบถ้วนหรือไม่"}},{"dim":"SN","pole":"N","reverse":true,"text":{"zh":"我容易把不同领域的想法联系起来。","en":"I easily connect disparate ideas across different domains.","th":"ฉันมักเชื่อมโยงแนวคิดจากหลากหลายสาขาเข้าด้วยกันได้อย่างเป็นธรรมชาติ"}},{"dim":"TF","pole":"T","reverse":true,"text":{"zh":"我愿意接受有依据、即使不太好听的意见。","en":"I welcome well-founded criticism, even if it is blunt.","th":"ฉันยินดีรับฟังคำวิจารณ์ที่มีหลักฐานสนับสนุน แม้จะฟังดูตรงไปตรงมาก็ตาม"}},{"dim":"TF","pole":"F","reverse":true,"text":{"zh":"我倾向于用尊重对方的方式指出问题。","en":"I aim to highlight issues with empathy and tact.","th":"ฉันมักจะชี้ให้เห็นจุดบกพร่องด้วยความสุภาพและคำนึงถึงความรู้สึกของอีกฝ่าย"}},{"dim":"JP","pole":"J","reverse":true,"text":{"zh":"我偏好有组织、有结构的工作方式。","en":"I favor structured, organized workflows.","th":"ฉันชอบการทำงานที่เป็นระเบียบ มีแบบแผนชัดเจน"}},{"dim":"JP","pole":"P","reverse":true,"text":{"zh":"我不介意在方向尚未完全确定时先开始探索。","en":"I am comfortable exploring before the final direction is locked in.","th":"ฉันไม่กังวลที่จะเริ่มทดลองสำรวจแม้ทิศทางจะยังไม่ชัดเจนร้อยเปอร์เซ็นต์"}},{"dim":"EI","pole":"E","reverse":false,"text":{"zh":"我更喜欢通过现场交流来推进协作。","en":"I prefer driving momentum through real-time spoken discussions.","th":"ฉันชอบขับเคลื่อนความร่วมมือผ่านการพูดคุยสื่อสารแบบเรียลไทม์"}},{"dim":"EI","pole":"I","reverse":false,"text":{"zh":"我需要安静、不被打扰的时间来完成高质量工作。","en":"I require uninterrupted quiet time to deliver high-quality work.","th":"ฉันต้องการช่วงเวลาที่เงียบสงบโดยไม่ถูกรบกวนเพื่อสร้างสรรค์งานคุณภาพสูง"}},{"dim":"SN","pole":"S","reverse":false,"text":{"zh":"我更容易接受有明确证据支持的建议。","en":"I am more persuaded by proposals backed by empirical evidence.","th":"ฉันเปิดรับข้อเสนอแนะที่มีหลักฐานเชิงประจักษ์ชัดเจนสนับสนุนได้ง่ายกว่า"}},{"dim":"SN","pole":"N","reverse":false,"text":{"zh":"我会想象现有流程可以怎样被重新设计。","en":"I frequently imagine how existing processes might be reimagined.","th":"ฉันมักจินตนาการถึงวิธีการออกแบบกระบวนการทำงานที่มีอยู่ใหม่ให้ดียิ่งขึ้น"}},{"dim":"TF","pole":"T","reverse":false,"text":{"zh":"我会优先考虑决策的效果和效率。","en":"I prioritize efficacy, speed, and objective outcomes in decisions.","th":"ฉันให้ความสำคัญกับประสิทธิภาพและผลลัพธ์ของการตัดสินใจเป็นอันดับแรก"}},{"dim":"TF","pole":"F","reverse":false,"text":{"zh":"我会关注决定是否让某些人感到被忽略。","en":"I check whether a decision might leave anyone feeling overlooked.","th":"ฉันจะคอยสังเกตว่าการตัดสินใจใดๆ ทำให้มีใครรู้สึกว่าถูกละเลยหรือไม่"}},{"dim":"JP","pole":"J","reverse":false,"text":{"zh":"我会定期整理待办事项并跟踪完成情况。","en":"I regularly maintain to-do lists and track completion progress.","th":"ฉันจัดระเบียบรายการสิ่งที่ต้องทำและติดตามความคืบหน้าอย่างสม่ำเสมอ"}},{"dim":"JP","pole":"P","reverse":false,"text":{"zh":"我倾向于同时推进多个感兴趣的想法。","en":"I tend to juggle multiple creative threads concurrently.","th":"ฉันชอบผลักดันหลายไอเดียที่น่าสนใจไปพร้อมๆ กัน"}},{"dim":"EI","pole":"E","reverse":true,"text":{"zh":"讨论时，我会自然地接续他人的话题。","en":"In group talks, I naturally build on what others just said.","th":"เมื่อสนทนากัน ฉันมักจะต่อยอดบทสนทนาจากประเด็นของผู้อื่นได้อย่างลื่นไหล"}},{"dim":"EI","pole":"I","reverse":true,"text":{"zh":"我更愿意通过文字表达复杂或敏感的想法。","en":"I prefer written communication for nuanced or delicate thoughts.","th":"ฉันชอบสื่อสารความคิดที่ซับซ้อนหรือละเอียดอ่อนผ่านตัวอักษรมากกว่า"}},{"dim":"SN","pole":"S","reverse":true,"text":{"zh":"我喜欢把大任务拆成清楚、具体的小步骤。","en":"I break large projects down into tangible, sequential milestones.","th":"ฉันชอบซอยงานใหญ่ให้เป็นขั้นตอนย่อยๆ ที่ชัดเจนและทำได้จริง"}},{"dim":"SN","pole":"N","reverse":true,"text":{"zh":"我喜欢先理解原理，再决定具体怎么做。","en":"I want to understand root principles before choosing tactical steps.","th":"ฉันชอบทำความเข้าใจหลักการพื้นฐานก่อนตัดสินใจเลือกวิธีดำเนินการ"}},{"dim":"TF","pole":"T","reverse":true,"text":{"zh":"我喜欢把问题拆开，逐项分析原因。","en":"I deconstruct problems systematically to diagnose root causes.","th":"ฉันชอบแยกแยะปัญหาออกเป็นส่วนๆ และวิเคราะห์สาเหตุทีละประเด็น"}},{"dim":"TF","pole":"F","reverse":true,"text":{"zh":"我认为倾听和理解本身就是有效协作的一部分。","en":"I believe empathetic listening is an essential part of teamwork.","th":"ฉันเชื่อว่าการตั้งใจฟังและเข้าใจผู้อื่นเป็นส่วนสำคัญยิ่งของการทำงานร่วมกัน"}},{"dim":"JP","pole":"J","reverse":true,"text":{"zh":"我喜欢尽早确定项目范围和优先级。","en":"I like locking down project scope and priorities early on.","th":"ฉันชอบกำหนดขอบเขตและลำดับความสำคัญของโครงการให้ชัดเจนตั้งแต่แรก"}},{"dim":"JP","pole":"P","reverse":true,"text":{"zh":"我喜欢灵活安排工作节奏。","en":"I prefer keeping my working rhythm fluid and adaptive.","th":"ฉันชอบความยืดหยุ่นในการจัดสรรจังหวะเวลาการทำงานของตนเอง"}},{"dim":"EI","pole":"E","reverse":false,"text":{"zh":"我倾向于把想法说出来，再根据反馈调整。","en":"I tend to voice rough ideas and adjust based on live reactions.","th":"ฉันมักจะพูดไอเดียออกมาก่อนแล้วค่อยปรับแต่งตามเสียงสะท้อนที่ได้รับ"}},{"dim":"EI","pole":"I","reverse":false,"text":{"zh":"我常在会议结束后才想到最好的补充意见。","en":"My best insights often come after the meeting has concluded.","th":"ความคิดเห็นที่ดีที่สุดของฉันมักจะผุดขึ้นมาหลังจากการประชุมสิ้นสุดลง"}},{"dim":"SN","pole":"S","reverse":false,"text":{"zh":"我倾向于先解决眼前最明确的问题。","en":"I prioritize addressing the most immediate, concrete problem first.","th":"ฉันมักจะเลือกแก้ไขปัญหาที่ชัดเจนและอยู่ตรงหน้าที่สุดก่อน"}},{"dim":"SN","pole":"N","reverse":false,"text":{"zh":"我倾向于关注长期影响和潜在机会。","en":"I gravitate toward long-term implications and hidden opportunities.","th":"ฉันมีแนวโน้มที่จะมองหาผลกระทบระยะยาวและโอกาสที่อาจเกิดขึ้นในอนาคต"}},{"dim":"TF","pole":"T","reverse":false,"text":{"zh":"我倾向于用明确标准比较多个选项。","en":"I compare alternatives against clear, objective criteria.","th":"ฉันมักเปรียบเทียบทางเลือกต่างๆ ด้วยเกณฑ์มาตรฐานที่ชัดเจน"}},{"dim":"TF","pole":"F","reverse":false,"text":{"zh":"我会考虑团队成员的处境再安排工作。","en":"I factor in colleagues' personal workload and wellbeing when assigning work.","th":"ฉันจะคำนึงถึงบริบทและความพร้อมของเพื่อนร่วมทีมก่อนมอบหมายงาน"}},{"dim":"JP","pole":"J","reverse":false,"text":{"zh":"当计划改变时，我希望尽快明确新的安排。","en":"When plans shift, I want the new roadmap clarified promptly.","th":"เมื่อแผนงานเปลี่ยน ฉันต้องการให้ระบุแนวทางใหม่ให้ชัดเจนโดยเร็วที่สุด"}},{"dim":"JP","pole":"P","reverse":false,"text":{"zh":"我认为过早定案可能错过更好的选择。","en":"I feel finalizing decisions prematurely risks missing superior options.","th":"ฉันรู้สึกว่าการรีบตัดสินใจเร็วเกินไปอาจทำให้พลาดทางเลือกที่ดีกว่า"}},{"dim":"EI","pole":"E","reverse":true,"text":{"zh":"多人协作通常让我感到投入。","en":"Collaborating with a group typically makes me feel engaged.","th":"การทำงานร่วมกันกับคนหลายคนมักทำให้ฉันรู้สึกมีพลังและมีส่วนร่วม"}},{"dim":"EI","pole":"I","reverse":true,"text":{"zh":"我倾向于先观察团队互动，再决定何时参与。","en":"I observe team dynamics before deciding when to step in.","th":"ฉันมักจะสังเกตบรรยากาศในทีมก่อนตัดสินใจว่าควรเข้าร่วมในจังหวะใด"}},{"dim":"SN","pole":"S","reverse":true,"text":{"zh":"我通常会核对数字、日期和实际条件。","en":"I routinely double-check numbers, dates, and practical conditions.","th":"ฉันมักจะตรวจสอบตัวเลข วันที่ และเงื่อนไขความเป็นจริงอย่างละเอียดถี่ถ้วน"}},{"dim":"SN","pole":"N","reverse":true,"text":{"zh":"我会从当前问题联想到更广泛的系统。","en":"I readily zoom out from the current issue to the broader system.","th":"ฉันสามารถเชื่อมโยงปัญหาเฉพาะหน้าไปยังภาพรวมของระบบที่กว้างกว่าได้ง่าย"}},{"dim":"TF","pole":"T","reverse":true,"text":{"zh":"我认为指出错误有助于团队提升。","en":"I see calling out mistakes as a valuable driver of team growth.","th":"ฉันมองว่าการชี้จุดผิดพลาดตรงๆ ช่วยให้ทีมเกิดการพัฒนาอย่างแท้จริง"}},{"dim":"TF","pole":"F","reverse":true,"text":{"zh":"我重视让每个人都有机会表达看法。","en":"I place high value on ensuring every voice has a chance to be heard.","th":"ฉันให้ความสำคัญกับการเปิดโอกาสให้ทุกคนได้แสดงความคิดเห็นอย่างทั่วถึง"}},{"dim":"JP","pole":"J","reverse":true,"text":{"zh":"我倾向于先完成手头任务，再开始新的任务。","en":"I finish current commitments before taking on new ones.","th":"ฉันมักจะทำงานที่มีอยู่ในมือให้เสร็จเรียบร้อยก่อนเริ่มต้นงานใหม่"}},{"dim":"JP","pole":"P","reverse":true,"text":{"zh":"我喜欢边做边发现问题，再迭代方案。","en":"I like learning through action and iterating solutions on the fly.","th":"ฉันชอบเรียนรู้จากการลงมือทำ แล้วค่อยๆ ปรับปรุงแก้ไขไปตามสถานการณ์"}},{"dim":"EI","pole":"E","reverse":false,"text":{"zh":"我喜欢即时讨论而不是长时间独自琢磨。","en":"I prefer lively real-time discussion over long solitary pondering.","th":"ฉันชอบการแลกเปลี่ยนแบบสดๆ มากกว่าการนั่งคิดคนเดียวเป็นเวลานาน"}},{"dim":"EI","pole":"I","reverse":false,"text":{"zh":"独立完成一部分工作能让我更专注。","en":"Working independently on a focused piece allows me to enter deep focus.","th":"การได้ทำงานชิ้นใดชิ้นหนึ่งอย่างอิสระคนเดียวทำให้ฉันมีสมาธิได้ดีกว่า"}},{"dim":"SN","pole":"S","reverse":false,"text":{"zh":"我喜欢说明谁负责什么、何时完成。","en":"I like clarifying exactly who is accountable for what and by when.","th":"ฉันชอบระบุให้ชัดเจนว่าใครรับผิดชอบส่วนใดและต้องเสร็จเมื่อไหร่"}},{"dim":"SN","pole":"N","reverse":false,"text":{"zh":"我对开放式、没有唯一答案的问题感兴趣。","en":"I am energized by open-ended questions without a single right answer.","th":"ฉันรู้สึกสนใจคำถามปลายเปิดที่ไม่มีคำตอบตายตัวเพียงคำตอบเดียว"}},{"dim":"TF","pole":"T","reverse":false,"text":{"zh":"我会追问一个结论是否有充分证据支持。","en":"I probe whether claims are supported by rigorous evidence.","th":"ฉันจะซักถามเสมอว่าข้อสรุปนั้นมีหลักฐานสนับสนุนเพียงพอหรือไม่"}},{"dim":"TF","pole":"F","reverse":false,"text":{"zh":"我会努力在坦诚和体贴之间找到平衡。","en":"I strive to balance candor with compassion.","th":"ฉันพยายามสร้างสมดุลระหว่างความตรงไปตรงมาและความถนอมน้ำใจ"}},{"dim":"JP","pole":"J","reverse":false,"text":{"zh":"我喜欢把复杂项目分阶段管理。","en":"I prefer managing complex initiatives in phased milestones.","th":"ฉันชอบแบ่งโครงการที่ซับซ้อนออกเป็นระยะๆ เพื่อให้จัดการได้ง่าย"}},{"dim":"JP","pole":"P","reverse":false,"text":{"zh":"我更愿意在过程中逐渐明确任务细节。","en":"I am comfortable letting task specifics emerge naturally along the way.","th":"ฉันชอบให้รายละเอียดของงานค่อยๆ ชัดเจนขึ้นในระหว่างการลงมือปฏิบัติ"}},{"dim":"EI","pole":"E","reverse":true,"text":{"zh":"我会主动向相关同事同步进展。","en":"I proactively broadcast status updates to relevant peers.","th":"ฉันมักจะรายงานความคืบหน้าให้เพื่อนร่วมงานที่เกี่ยวข้องทราบในเชิงรุก"}},{"dim":"EI","pole":"I","reverse":true,"text":{"zh":"我更喜欢少量但深入的工作交流。","en":"I favor fewer, deeper work conversations over frequent superficial chatter.","th":"ฉันชอบการพูดคุยเรื่องงานที่ลึกซึ้งและมีสาระมากกว่าการคุยบ่อยๆ แต่ผิวเผิน"}},{"dim":"SN","pole":"S","reverse":true,"text":{"zh":"我更关注方案在现实环境中是否可行。","en":"I focus primarily on whether an idea works within real-world constraints.","th":"ฉันมุ่งเน้นเป็นพิเศษว่าข้อเสนอนั้นสามารถนำไปใช้ได้จริงในทางปฏิบัติหรือไม่"}},{"dim":"SN","pole":"N","reverse":true,"text":{"zh":"我喜欢用类比或概念框架解释复杂问题。","en":"I like clarifying complex problems using analogies or conceptual models.","th":"ฉันชอบใช้การเปรียบเทียบหรือกรอบแนวคิดในการอธิบายเรื่องที่ซับซ้อน"}},{"dim":"TF","pole":"T","reverse":true,"text":{"zh":"我更关注规则和决策过程是否合理。","en":"I scrutinize whether governance rules and decision flows make rational sense.","th":"ฉันให้ความสำคัญว่ากฎเกณฑ์และขั้นตอนการตัดสินใจมีความสมเหตุสมผลหรือไม่"}},{"dim":"TF","pole":"F","reverse":true,"text":{"zh":"我更容易被真实的人类影响和具体故事打动。","en":"I am deeply moved by human stories and real personal impact.","th":"ฉันมักจะประทับใจและคล้อยตามเรื่องราวของผู้คนและผลกระทบต่อชีวิตจริง"}},{"dim":"JP","pole":"J","reverse":true,"text":{"zh":"我会主动确认下一步行动和责任人。","en":"I proactively lock down next steps and action owners before wrapping up.","th":"ฉันจะยืนยันขั้นตอนต่อไปและผู้รับผิดชอบอย่างชัดเจนก่อนจบบทสนทนา"}},{"dim":"JP","pole":"P","reverse":true,"text":{"zh":"我对临时出现的新机会通常保持开放。","en":"I stay receptive to emergent opportunities on the fly.","th":"ฉันมักเปิดรับโอกาสใหม่ๆ ที่เกิดขึ้นกะทันหันอย่างยืดหยุ่น"}},{"dim":"EI","pole":"E","reverse":false,"text":{"zh":"需要做决定时，我常通过谈话澄清思路。","en":"When a decision looms, talking it out helps me crystallize my view.","th":"เมื่อต้องตัดสินใจ การได้พูดคุยแลกเปลี่ยนมักช่วยให้ความคิดของฉันกระจ่างขึ้น"}},{"dim":"EI","pole":"I","reverse":false,"text":{"zh":"我通常不会为了填补沉默而说话。","en":"I rarely speak just to break the silence.","th":"ฉันไม่ค่อยพูดเพียงเพื่อทำลายความเงียบในห้อง"}},{"dim":"SN","pole":"S","reverse":false,"text":{"zh":"我偏好清晰、直接、少歧义的说明。","en":"I prefer instructions that are direct, unambiguous, and plain.","th":"ฉันชอบคำอธิบายที่ตรงไปตรงมา ชัดเจน และไม่มีความกำกวม"}},{"dim":"SN","pole":"N","reverse":false,"text":{"zh":"我常会质疑当前做法是否还有更好的替代方案。","en":"I often question whether existing conventions could be improved upon.","th":"ฉันมักตั้งคำถามว่าวิธีปฏิบัติในปัจจุบันยังมีทางเลือกอื่นที่ดีกว่านี้หรือไม่"}},{"dim":"TF","pole":"T","reverse":false,"text":{"zh":"我能在不认同某个想法时仍客观讨论它。","en":"I can objectively evaluate an idea even when I personally disagree with it.","th":"ฉันสามารถร่วมอภิปรายข้อเสนอได้อย่างเป็นกลางแม้ตนเองจะไม่เห็นด้วยก็ตาม"}},{"dim":"TF","pole":"F","reverse":false,"text":{"zh":"我认为处理冲突时，关系修复也很重要。","en":"I believe interpersonal reconciliation is as critical as resolving the dispute.","th":"ฉันเชื่อว่าในการจัดการความขัดแย้ง การเยียวยาความสัมพันธ์มีความสำคัญไม่แพ้กัน"}},{"dim":"JP","pole":"J","reverse":false,"text":{"zh":"我更愿意在信息足够后尽快定案。","en":"I prefer bringing matters to closure as soon as there is sufficient data.","th":"ฉันชอบสรุปข้อตกลงให้เรียบร้อยโดยเร็วเมื่อมีข้อมูลเพียงพอแล้ว"}},{"dim":"JP","pole":"P","reverse":false,"text":{"zh":"我倾向于根据情况决定下一步，而非严格照计划。","en":"I prefer navigating intuitively by circumstances rather than rigid plans.","th":"ฉันชอบตัดสินใจก้าวต่อไปตามสถานการณ์ตรงหน้ามากกว่าการยึดติดกับแผนเดิม"}}];
+
+let currentLang = "zh";
+
+function renderQuestions() {
+  const t = INTRO[currentLang] || INTRO.zh;
+  const root = document.getElementById('questions');
+
+  // Preserve existing checked answers
+  const currentAnswers = [];
+  ITEMS.forEach((_, i) => {
+    const checked = document.querySelector(`[name=q${i}]:checked`);
+    currentAnswers[i] = checked ? checked.value : null;
+  });
+
+  root.innerHTML = "";
+  ITEMS.forEach((it, i) => {
+    const s = document.createElement('section');
+    s.className = 'item';
+    const p = document.createElement('p');
+    const qText = it.text[currentLang] || it.text.zh;
+    p.textContent = (i + 1) + '. ' + qText;
+    s.appendChild(p);
+
+    const sc = document.createElement('div');
+    sc.className = 'scale';
+    for (let v = 1; v <= 5; v++) {
+      const l = document.createElement('label');
+      const isChecked = currentAnswers[i] !== null && Number(currentAnswers[i]) === v;
+      l.innerHTML = `<input type="radio" name="q${i}" value="${v}" required ${isChecked ? "checked" : ""}>
+        <span class="val-num">${v}</span>
+        <span class="val-desc">${t.labels[v]}</span>`;
+      sc.appendChild(l);
+    }
+    s.appendChild(sc);
+    root.appendChild(s);
+  });
+}
+
+function updateProgress() {
+  const answeredCount = ITEMS.filter((_, i) => document.querySelector(`[name=q${i}]:checked`)).length;
+  const pct = Math.round((answeredCount / ITEMS.length) * 100);
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+  const t = INTRO[currentLang] || INTRO.zh;
+  document.getElementById('progressText').textContent = t.progress(answeredCount, ITEMS.length);
+}
+
+function setLanguage(lang) {
+  currentLang = INTRO[lang] ? lang : "zh";
+  const d = INTRO[currentLang];
+  document.documentElement.lang = currentLang === "zh" ? "zh-CN" : currentLang;
+  document.getElementById("backLink").textContent = d.backText;
+  document.getElementById("backLink").href = `${PORTAL_BASE}?lang=${currentLang}`;
+  document.getElementById("mainTitle").textContent = d.title;
+  document.getElementById("noticeTitle").textContent = d.head;
+  ["p1", "p2", "p3", "p4"].forEach((k, i) => {
+    document.getElementById("notice" + (i + 1)).textContent = d[k];
+  });
+  document.getElementById("surveySubtitle").textContent = d.subtitle;
+  document.getElementById("surveyNotice").innerHTML = d.notice;
+  document.getElementById("submit").textContent = d.submitBtn;
+  document.getElementById("clear").textContent = d.clearBtn;
+  document.getElementById("statsHead").textContent = d.statsHead;
+  document.getElementById("statsSub").textContent = d.statsSub;
+  document.getElementById("pin").placeholder = d.pinPlaceholder;
+  document.getElementById("statsBtn").textContent = d.statsBtn;
+  document.getElementById("footerNote").textContent = d.footerNote;
+
+  renderQuestions();
+  updateProgress();
+
+  // If a result is already shown, re-render it in the new language
+  const resEl = document.getElementById('result');
+  if (!resEl.classList.contains('hidden') && resEl.dataset.type) {
+    displayResult(resEl.dataset.type, JSON.parse(resEl.dataset.axes));
+  }
+
+  try { localStorage.setItem("mbti_survey_lang", currentLang); } catch(e){}
+}
+
+function displayResult(type, rawAxes) {
+  const t = INTRO[currentLang] || INTRO.zh;
+  const resEl = document.getElementById('result');
+  resEl.dataset.type = type;
+  resEl.dataset.axes = JSON.stringify(rawAxes);
+
+  const localizedAxes = rawAxes.map(a => {
+    const dimInfo = t.dims[a.dim];
+    return {
+      dim: a.dim,
+      left: dimInfo.left,
+      right: dimInfo.right,
+      leftCode: a.leftCode,
+      rightCode: a.rightCode,
+      leftPct: a.leftPct,
+      note: dimInfo.note
+    };
+  });
+
+  const preferenceNames = localizedAxes.map(a => {
+    const code = a.leftPct >= 50 ? a.leftCode : a.rightCode;
+    return t.names[code] || code;
+  }).join(currentLang === 'zh' ? '、' : ', ');
+
+  const summaryText = currentLang === 'zh'
+    ? `你的自评倾向为：${preferenceNames}。这描述的是偏好，不是能力高低。`
+    : (currentLang === 'th'
+      ? `ความชอบจากการประเมินตนเองของคุณคือ: ${preferenceNames} นี่คือการอธิบายความชอบ ไม่ใช่ระดับความสามารถ`
+      : `Your self-assessed preference profile leans toward: ${preferenceNames}. This reflects natural tendencies, not capability.`);
+
+  const tipsList = localizedAxes.map(a => {
+    const code = a.leftPct >= 50 ? a.leftCode : a.rightCode;
+    return t.tips[code];
+  });
+
+  resEl.innerHTML = `
+    <div class="muted">${t.reportLabel}</div>
+    <div class="type">${type}</div>
+    <p style="font-size: 15px; margin: 8px 0 16px;">${summaryText}</p>
+    ${localizedAxes.map(a => `
+      <div class="axis">
+        <div style="display:flex; justify-content:space-between; font-weight:700; font-size:14px;">
+          <span>${a.left}</span>
+          <span>${a.right}</span>
+        </div>
+        <div class="axisline">
+          <div class="axisfill" style="width: ${a.leftPct}%;"></div>
+        </div>
+        <div class="muted" style="font-size: 12.5px; margin-bottom: 6px;">
+          ${a.left} ${a.leftPct}% &middot; ${a.right} ${100 - a.leftPct}%
+        </div>
+        <p style="margin: 4px 0 0; font-size: 13px; color: #475569;">${a.note}</p>
+      </div>
+    `).join('')}
+    <h3 style="font-size: 16px; margin: 20px 0 10px;">${t.adviceLabel}</h3>
+    <ul style="padding-left: 20px; font-size: 14px; line-height: 1.8;">
+      ${tipsList.map(item => `<li>${item}</li>`).join('')}
+    </ul>
+    <p class="muted" style="font-size: 12.5px; margin-top: 14px;">${t.reportFoot}</p>
+  `;
+  resEl.classList.remove('hidden');
+}
+
+document.getElementById('questions').addEventListener('change', updateProgress);
+
+document.getElementById('clear').onclick = () => {
+  const t = INTRO[currentLang] || INTRO.zh;
+  if (confirm(t.confirmClear)) {
+    document.getElementById('form').reset();
+    const resEl = document.getElementById('result');
+    resEl.classList.add('hidden');
+    delete resEl.dataset.type;
+    delete resEl.dataset.axes;
+    document.getElementById('error').classList.add('hidden');
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+};
+
+document.getElementById('form').onsubmit = async (e) => {
+  e.preventDefault();
+  const t = INTRO[currentLang] || INTRO.zh;
+  const answers = ITEMS.map((_, i) => {
+    const x = document.querySelector(`[name=q${i}]:checked`);
+    return x ? +x.value : null;
+  });
+  const err = document.getElementById('error');
+  err.classList.add('hidden');
+  if (answers.some(x => x === null)) {
+    err.textContent = t.errIncomplete;
+    err.classList.remove('hidden');
+    return;
+  }
+  const b = document.getElementById('submit');
+  b.disabled = true;
+  b.textContent = t.submittingBtn;
+  try {
+    const r = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answers })
+    });
+    const d = await r.json();
+    if (!r.ok) throw Error(d.error || 'Submission failed');
+    displayResult(d.type, d.axes);
+    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch(x) {
+    err.textContent = x.message;
+    err.classList.remove('hidden');
+  } finally {
+    b.disabled = false;
+    b.textContent = t.submitBtn;
+  }
+};
+
+document.getElementById('statsBtn').onclick = async () => {
+  const t = INTRO[currentLang] || INTRO.zh;
+  const err = document.getElementById('statsError'), box = document.getElementById('stats');
+  err.classList.add('hidden');
+  box.classList.add('hidden');
+  const b = document.getElementById('statsBtn');
+  b.disabled = true;
+  b.textContent = t.readingStats;
+  try {
+    const r = await fetch('/api/stats', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin: document.getElementById('pin').value })
+    });
+    const d = await r.json();
+    if (!r.ok) throw Error(d.error || 'Failed to read stats');
+    let h = `
+      <div class="result" style="margin-top:0;">
+        <b>${t.statTotal(d.total)}</b>
+        <p style="margin: 4px 0 0;">${t.statAvgText}</p>
+      </div>
+    `;
+    d.axes.forEach(a => {
+      const dimInfo = t.dims[a.dim] || { left: a.left, right: a.right };
+      h += `
+        <div class="axis">
+          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:13.5px;">
+            <span>${dimInfo.left}</span>
+            <span>${dimInfo.right}</span>
+          </div>
+          <div class="axisline"><div class="axisfill" style="width: ${a.leftPct}%;"></div></div>
+          <div class="muted" style="font-size: 12.5px;">${dimInfo.left} ${a.leftPct}% &middot; ${dimInfo.right} ${100 - a.leftPct}%</div>
+        </div>
+      `;
+    });
+    h += `
+      <h3 style="font-size: 16px; margin: 20px 0 8px;">${t.statTypesHead}</h3>
+      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin: 10px 0;">
+    `;
+    d.types.forEach(x => {
+      h += `
+        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; font-size: 13px;">
+          <strong>${x.type}</strong>: ${x.count}
+        </div>
+      `;
+    });
+    h += `</div><p class="muted" style="font-size: 12.5px;">${t.statTypesFoot}</p>`;
+    box.innerHTML = h;
+    box.classList.remove('hidden');
+  } catch(x) {
+    err.textContent = x.message;
+    err.classList.remove('hidden');
+  } finally {
+    b.disabled = false;
+    b.textContent = t.statsBtn;
+  }
+};
+
+const urlLang = new URLSearchParams(window.location.search).get("lang");
+const savedLang = (typeof localStorage !== "undefined" && localStorage.getItem("mbti_survey_lang"));
+const select = document.getElementById("language");
+select.value = INTRO[urlLang] ? urlLang : (INTRO[savedLang] ? savedLang : "zh");
+setLanguage(select.value);
+
+select.addEventListener("change", (e) => {
+  setLanguage(e.target.value);
+});
+</script>
+</body>
+</html>
